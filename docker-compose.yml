@@ -1,0 +1,24 @@
+# specifically to make sure that our syntax matches the specific version of docker
+version: '3.9'
+
+# Docker compose file compose of one or more services that is needed for your application
+services:
+  # This is a name of our service, just a service that will run a docker file
+  app:
+    #This means we want to build our docker file inside our current directory
+    build: 
+      context: .
+      args:
+        - DEV=true
+    #This maps a port on our local machine to a port on the container this is how we can access the network  
+    ports:
+      - "8000:8000"
+    #Way of mapping directories from our system into the docker containe, we want the updates we do in our code
+    # to be reflected on the container without re-building the container
+    volumes:
+      - "./app:/app"
+
+    # This is a command that is used to run the service, we can override this command when using RUN
+    # If run is not specified the command inside docker-compose will be run
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
